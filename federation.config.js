@@ -5,7 +5,7 @@ module.exports = withNativeFederation({
   name: 'settings',
 
   exposes: {
-    './Settings': './src/app/pages/settings.component.ts',
+    './Settings': './src/app/pages/settings/settings.component.ts',
   },
 
   shared: {
@@ -13,6 +13,9 @@ module.exports = withNativeFederation({
   },
 
   skip: [
+    'monaco-editor',
+    '@monaco-editor/loader',
+    '@monaco-editor/loader/playground',
     'rxjs/ajax',
     'rxjs/fetch',
     'rxjs/testing',

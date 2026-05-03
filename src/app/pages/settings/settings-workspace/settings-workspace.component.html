@@ -1,0 +1,210 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Settings Workspace</p>
+      <h1>設定工作台</h1>
+      <p class="subtitle">
+        這一頁把 fuse 搜尋與 zod 驗證放進設定模組，讓 TS 複雜度更高。
+      </p>
+    </div>
+    <div class="header-actions">
+      <a
+        mat-stroked-button
+        routerLink="/settings"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >設定首頁</a
+      >
+      <a
+        mat-flat-button
+        routerLink="/settings/notifications"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >通知規則</a
+      >
+      <a
+        mat-flat-button
+        routerLink="/settings/workspace"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >工作台偏好</a
+      >
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <mat-card class="panel">
+      <mat-form-field appearance="outline"
+        ><mat-label>搜尋設定</mat-label
+        ><input
+          matInput
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($any($event))"
+      /></mat-form-field>
+      <div class="search-list">
+        @for (item of searchResults(); track item.id) {
+        <div class="search-row">
+          <strong>{{ item.title }}</strong
+          ><span>{{ item.description }}</span>
+        </div>
+        }
+      </div>
+    </mat-card>
+
+    <mat-card class="panel">
+      <form [formGroup]="workspaceForm" class="workspace-form">
+        <div class="toggle-row">
+          <mat-slide-toggle formControlName="emailDigest"
+            >啟用 Email Digest</mat-slide-toggle
+          >
+          <mat-slide-toggle formControlName="compactMode"
+            >啟用 Compact Mode</mat-slide-toggle
+          >
+        </div>
+        <mat-form-field appearance="outline"
+          ><mat-label>每週檢視日</mat-label
+          ><input matInput formControlName="weeklyReviewDay"
+        /></mat-form-field>
+        <mat-form-field appearance="outline"
+          ><mat-label>預設首頁</mat-label
+          ><mat-select formControlName="defaultLandingPage"
+            ><mat-option value="dashboard">Dashboard</mat-option
+            ><mat-option value="bookkeeping">Bookkeeping</mat-option
+            ><mat-option value="currency-converter">Currency</mat-option
+            ><mat-option value="settings">Settings</mat-option></mat-select
+          ></mat-form-field
+        >
+        <div class="button-row">
+          <button mat-flat-button type="button" (click)="applyCustomPalette()">
+            套用目前配色
+          </button>
+          <button mat-stroked-button type="button" (click)="validateConfig()">
+            驗證設定
+          </button>
+        </div>
+        <p>{{ validationMessage() }}</p>
+      </form>
+    </mat-card>
+
+    <mat-card class="panel panel-wide">
+      <div class="panel-heading">
+        <div>
+          <h2>預設顏色組</h2>
+          <p>先選一組基底，再視需要微調各部位顏色。</p>
+        </div>
+      </div>
+      <div class="preset-grid">
+        @for (preset of colorPresets; track preset.id) {
+        <button
+          type="button"
+          class="preset-card"
+          [class.active]="activePreset() === preset.id"
+          (click)="applyPreset(preset)"
+        >
+          <div class="preset-swatch-row">
+            <span
+              class="swatch"
+              [style.background]="preset.palette.toolbar"
+            ></span>
+            <span
+              class="swatch"
+              [style.background]="preset.palette.sidebar"
+            ></span>
+            <span
+              class="swatch"
+              [style.background]="preset.palette.accent"
+            ></span>
+            <span
+              class="swatch"
+              [style.background]="preset.palette.surface"
+            ></span>
+          </div>
+          <strong>{{ preset.label }}</strong>
+          <span>{{ preset.description }}</span>
+        </button>
+        }
+      </div>
+    </mat-card>
+
+    <mat-card class="panel panel-wide">
+      <div class="panel-heading">
+        <div>
+          <h2>各部位選色器</h2>
+          <p>針對背景、工具列、側欄、強調色與文字做細部調整。</p>
+        </div>
+      </div>
+      <div class="palette-grid" [formGroup]="paletteForm">
+        @for (field of paletteFields; track field.key) {
+        <label class="color-field">
+          <span class="field-copy">
+            <strong>{{ field.label }}</strong>
+            <small>{{ field.description }}</small>
+          </span>
+          <div class="picker-row">
+            <input type="color" [formControlName]="field.key" />
+            <input matInput [formControlName]="field.key" />
+          </div>
+        </label>
+        }
+      </div>
+    </mat-card>
+
+    <mat-card class="panel panel-wide preview-panel">
+      <div class="panel-heading">
+        <div>
+          <h2>即時預覽</h2>
+          <p>預覽 toolbar、sidebar、surface 與 accent 的組合效果。</p>
+        </div>
+      </div>
+      <div class="color-preview" [ngStyle]="previewStyle()">
+        <div class="preview-toolbar">Finance Workspace</div>
+        <div class="preview-body">
+          <aside class="preview-sidebar">
+            <div class="preview-pill">Dashboard</div>
+            <div class="preview-pill">Bookkeeping</div>
+            <div class="preview-pill active">Settings</div>
+          </aside>
+          <section class="preview-surface">
+            <div class="preview-card">
+              <strong>Accent Block</strong>
+              <div class="preview-accent"></div>
+            </div>
+            <div class="preview-card muted">
+              Cards and panel surfaces follow the configured palette.
+            </div>
+          </section>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="panel panel-wide editor-panel">
+      <div class="panel-heading">
+        <div>
+          <h2>Monaco 進階設定編輯器</h2>
+          <p>
+            直接編輯整份 user settings
+            JSON，讓設定頁承載更重的編輯器與驗證流程。
+          </p>
+        </div>
+      </div>
+      <div class="button-row">
+        <button mat-stroked-button type="button" (click)="syncEditorFromForm()">
+          載入整份設定
+        </button>
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="validateEditorConfig()"
+        >
+          驗證 JSON
+        </button>
+        <button mat-flat-button type="button" (click)="applyEditorConfig()">
+          套用編輯器內容
+        </button>
+      </div>
+      <p>{{ editorMessage() }}</p>
+      <p>{{ editorValidationMessage() }}</p>
+      <div #monacoHost class="monaco-host"></div>
+    </mat-card>
+  </div>
+</section>

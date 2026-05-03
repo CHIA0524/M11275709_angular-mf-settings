@@ -20,12 +20,16 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "@monaco-editor/loader": "^1.7.0",
     "@softarc/native-federation-node": "^2.0.10",
     "echarts": "^6.0.0",
     "es-module-shims": "^1.5.12",
+    "fuse.js": "^7.1.0",
+    "monaco-editor": "^0.55.1",
     "ngx-echarts": "^18.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "zod": "^4.1.12",
     "zone.js": "~0.14.10"
   },
   "devDependencies": {

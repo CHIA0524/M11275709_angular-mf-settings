@@ -1,0 +1,78 @@
+<section class="page-shell">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Notification Rules</p>
+      <h1>通知設定頁</h1>
+      <p class="subtitle">這一頁把設定模組往表單規則與偏好預覽延伸。</p>
+    </div>
+    <div class="header-actions">
+      <a
+        mat-stroked-button
+        routerLink="/settings"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >設定首頁</a
+      >
+      <a
+        mat-flat-button
+        routerLink="/settings/notifications"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >通知規則</a
+      >
+      <a
+        mat-flat-button
+        routerLink="/settings/workspace"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >工作台偏好</a
+      >
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <mat-card class="panel">
+      <form [formGroup]="form" class="settings-form">
+        <mat-form-field appearance="outline"
+          ><mat-label>通知管道</mat-label
+          ><mat-select formControlName="channel"
+            ><mat-option value="email">Email</mat-option
+            ><mat-option value="app">App</mat-option></mat-select
+          ></mat-form-field
+        >
+        <mat-form-field appearance="outline"
+          ><mat-label>頻率</mat-label
+          ><mat-select formControlName="frequency"
+            ><mat-option value="daily">每日</mat-option
+            ><mat-option value="weekly">每週</mat-option
+            ><mat-option value="monthly">每月</mat-option></mat-select
+          ></mat-form-field
+        >
+        <mat-form-field appearance="outline"
+          ><mat-label>警示門檻</mat-label
+          ><input matInput formControlName="threshold"
+        /></mat-form-field>
+      </form>
+    </mat-card>
+
+    <mat-card class="panel">
+      <h2>規則預覽</h2>
+      <p>{{ digestPreview() }}</p>
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="previewEnabled.set(!previewEnabled())"
+      >
+        切換預覽
+      </button>
+      <div class="hint-list">
+        @for (item of matchedEntries; track item.id) {
+        <div class="hint-row">
+          <strong>{{ item.title }}</strong
+          ><span>{{ item.description }}</span>
+        </div>
+        }
+      </div>
+    </mat-card>
+  </div>
+</section>
