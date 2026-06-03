@@ -131,6 +131,7 @@ export class SettingsWorkspaceComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.editor?.dispose();
+    console.log('test')
   }
 
   applyPreset(preset: ColorPreset): void {
